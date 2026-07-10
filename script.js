@@ -142,15 +142,53 @@ if (heroBg && matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-redu
 const year = $('#year');
 if (year) year.textContent = new Date().getFullYear();
 
-function sendWhatsApp(e) {
-  e.preventDefault();
-  const n = $('#name')?.value.trim() || '';
-  const p = $('#phone')?.value.trim() || '';
-  const t = $('#type')?.value || '';
-  const m = $('#message')?.value.trim() || '';
-  const text = lang === 'ar'
-    ? `السلام عليكم، نبي عرض سعر من شركة المد العالي.\nالاسم: ${n}\nرقم الهاتف: ${p}\nنوع الطلب: ${t}\nالتفاصيل: ${m}`
-    : `Hello, I would like a quotation from Almad Alali Company.\nName: ${n}\nPhone: ${p}\nRequest type: ${t}\nDetails: ${m}`;
-  window.open(`https://wa.me/218916213353?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+
+
+// Secure contact form submission through the PHP backend.
+const contactForm = $('#contactForm');
+const submitBtn = $('#submitBtn');
+const formStatus = $('#formStatus');
+
+function showFormStatus(type, arText, enText) {
+  if (!formStatus) return;
+  formStatus.className = `form-status show ${type}`;
+  formStatus.textContent = lang === 'ar' ? arText : enText;
 }
-window.sendWhatsApp = sendWhatsApp;
+
+contactForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  formStatus?.classList.remove('show', 'success', 'error');
+
+  if (!contactForm.checkValidity()) {
+    contactForm.reportValidity();
+    return;
+  }
+
+  const originalText = submitBtn?.querySelector('span')?.textContent || '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    const label = submitBtn.querySelector('span');
+    if (label) label.textContent = lang === 'ar' ? 'جاري الإرسال...' : 'Sending...';
+  }
+
+  try {
+    const response = await fetch(contactForm.action, {
+      method: 'POST',
+      body: new FormData(contactForm),
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.success) throw new Error(data.message || 'Send failed');
+
+    contactForm.reset();
+    showFormStatus('success', 'تم إرسال طلبك بنجاح، وسنتواصل معك قريباً.', 'Your request was sent successfully. We will contact you soon.');
+  } catch (error) {
+    showFormStatus('error', 'تعذر إرسال الطلب حالياً. يمكنك التواصل معنا عبر واتساب أو الهاتف.', 'The request could not be sent. Please contact us by WhatsApp or phone.');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      const label = submitBtn.querySelector('span');
+      if (label) label.textContent = originalText;
+    }
+  }
+});

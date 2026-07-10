@@ -64,3 +64,11 @@ body{min-width:320px}
 @media(max-width:520px){.brand img{height:50px;max-width:112px}.menu-toggle{width:40px}.hero{min-height:800px}.hero-inner{padding-top:58px}.hero-label{font-size:12px}.hero-benefits{grid-template-columns:1fr 1fr 1fr}.hero-benefits span{font-size:10px}.stats-grid>div{padding:13px 4px}.stats-grid strong,.stats-grid em{font-size:19px}.stats-grid span{font-size:9px}.products-grid{grid-template-columns:1fr}.product-card .pic{height:205px}.values article{padding:18px}.feature-list article>span{flex-basis:39px;height:39px}.quote-form input,.quote-form select,.quote-form textarea{font-size:16px}.footer-grid{grid-template-columns:1fr}.footer-grid>div:first-child{grid-column:auto}.copyright{padding-inline:12px}.whatsapp-float{width:50px;height:50px;bottom:14px;inset-inline-end:14px}}
 @media(max-width:360px){.container{width:calc(100% - 18px)}.hero h1{font-size:32px}.hero h1 small{font-size:17px}.hero-benefits{gap:4px}.quote-form{padding:16px}.product-card>div:last-child{padding:18px}}
 @media(prefers-reduced-motion:reduce){.hero-copy>*{opacity:1;transform:none}.media-badge{animation:none}.hero-lines{animation:none}}
+
+/* Contact form email delivery states */
+.form-trap{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+.form-status{display:none;margin-top:14px;padding:12px 14px;border-radius:6px;font-size:13px;font-weight:700;line-height:1.7}
+.form-status.show{display:block}
+.form-status.success{background:#eaf8ef;color:#176b36;border:1px solid #bfe7cc}
+.form-status.error{background:#fff0f1;color:#9b111a;border:1px solid #f2c4c7}
+.quote-form button[disabled]{opacity:.68;cursor:not-allowed;transform:none!important}
